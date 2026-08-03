@@ -3,11 +3,20 @@ import os
 import pooch
 import requests
 
-from ._version import __version__
+# get version from pyproject.toml
+from importlib.metadata import version as _version
 
+try:
+    __version__ = _version("geocat.datafiles")
+except Exception:
+    # Local copy or not installed with setuptools.
+    # Disable minimum version checks on downstream libraries.
+    __version__ = "9999"
+
+# code for pooch
 POOCH = pooch.create(
     path=pooch.os_cache('geocat'),
-    base_url='https://github.com/NCAR/GeoCAT-datafiles/raw/main/',
+    base_url='https://github.com/NCAR/geocat-datafiles/raw/main/',
     registry={'registry.txt': None},
     retry_if_failed=10)
 
